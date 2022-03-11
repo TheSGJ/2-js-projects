@@ -94,7 +94,7 @@
           itemJsonArray.push([tit, desc]);
           localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
         }
-        update()
+        update();
       }
       function update(){
         if (localStorage.getItem('itemsJson')==null) {
