@@ -39,106 +39,111 @@
       </div>
     </div>
   </nav>
- 
-    <div class="container my-4">
-      <div class="form-group my-2">
-        <label for="title">Title</label>
-        <input type="text" class="form-control" id="title" aria-describedby="emailHelp">
-        <small id="emailHelp" class="form-text text-muted">Add an item to the list</small>
-      </div>
 
-      <div class="form-group my-2">
-        <label for="description">Description</label>
-        <textarea class="form-control" id="description" rows="3"></textarea>
-      </div>
-      <button id="add" class="btn btn-primary my-2">Add to list</button>
-      <button id="clear" class="btn btn-danger my-2">Clear list</button>
-      <div class="container">
-        <hr>
-      </div>
-      <div class="my" id="items">
-        <h2>My Lists</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">sno</th>
-              <th scope="col">title</th>
-              <th scope="col">description</th>
-              <th scope="col">actions</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            <tr>
-              <th scope="row">1</th>
-              <td>Touch Ubuntu</td>
-              <td>Touch & cover up some Ubuntu commands that no one knows.</td>
-              <td><button id="clear" class="btn btn-danger my-2">Delete</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div class="container my-4">
+    <div class="form-group my-2">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" id="title" aria-describedby="emailHelp">
+      <small id="emailHelp" class="form-text text-muted">Add an item to the list</small>
     </div>
-    <script>
-      function getAndUpdate(){
-        console.log("Updating List...");
-        tit = document.getElementById('title').value;
-        desc = document.getElementById('description').value;
-        if (localStorage.getItem('itemsJson')==null) {
-          itemJsonArray = [];
-          itemJsonArray.push([tit, desc]);
-          localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray))
-        }
-        else {
-          itemJsonArrayStr = localStorage.getItem('itemsJson')
-          itemJsonArray = JSON.parse(itemJsonArrayStr);
-          itemJsonArray.push([tit, desc]);
-          localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
-        }
-        update();
-      }
-      function update(){
-        if (localStorage.getItem('itemsJson')==null) {
-          itemJsonArray = [];
-          localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray))
-        }
-        else {
-          itemJsonArrayStr = localStorage.getItem('itemsJson')
-          itemJsonArray = JSON.parse(itemJsonArrayStr);
-        }
 
-        let tableBody = document.getElementById("tableBody")
-        let str = "";
-        itemJsonArray.forEach((element, index) => {
-          str += `
+    <div class="form-group my-2">
+      <label for="description">Description</label>
+      <textarea class="form-control" id="description" rows="3"></textarea>
+    </div>
+    <button id="add" class="btn btn-primary my-2">Add to list</button>
+    <button id="clear" class="btn btn-danger my-2" onclick="clearStorage()">Clear list</button>
+    <div class="container">
+      <hr>
+    </div>
+    <div class="my" id="items">
+      <h2>My Lists</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">sno</th>
+            <th scope="col">title</th>
+            <th scope="col">description</th>
+            <th scope="col">actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <th scope="row">1</th>
+            <td>Touch Ubuntu</td>
+            <td>Touch & cover up some Ubuntu commands that no one knows.</td>
+            <td><button id="clear" class="btn btn-danger my-2">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    function getAndUpdate() {
+      console.log("Updating List...");
+      tit = document.getElementById('title').value;
+      desc = document.getElementById('description').value;
+      if (localStorage.getItem('itemsJson') == null) {
+        itemJsonArray = [];
+        itemJsonArray.push([tit, desc]);
+        localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray))
+      }
+      else {
+        itemJsonArrayStr = localStorage.getItem('itemsJson')
+        itemJsonArray = JSON.parse(itemJsonArrayStr);
+        itemJsonArray.push([tit, desc]);
+        localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+      }
+      update();
+    }
+    function update() {
+      if (localStorage.getItem('itemsJson') == null) {
+        itemJsonArray = [];
+        localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray))
+      }
+      else {
+        itemJsonArrayStr = localStorage.getItem('itemsJson')
+        itemJsonArray = JSON.parse(itemJsonArrayStr);
+      }
+
+      let tableBody = document.getElementById("tableBody")
+      let str = "";
+      itemJsonArray.forEach((element, index) => {
+        str += `
               <tr>
                 <th scope="row">${index + 1}</th>
                 <td>${element[0]}</td>
                 <td>${element[1]}</td>
                 <td><button id="clear" onclick="deleted(${index})" class="btn btn-danger my-2">Delete</button></td>
               </tr>`;
-  
-        }),
+
+      }),
         tableBody.innerHTML = str;
-      }
-      add = document.getElementById("add");
-      add.addEventListener("click", getAndUpdate);
-      update()
-      function deleted(itemIndex){
-        console.log("Deleted", itemIndex)
-        itemJsonArray = JSON.parse(itemJsonArrayStr);
-        itemJsonArray.push([tit, desc]);
-        itemJsonArray.splice(itemIndex, 1);
-        localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray));
-        update();
-      }
+    }
+    add = document.getElementById("add");
+    add.addEventListener("click", getAndUpdate);
+    update()
+    function deleted(itemIndex) {
+      console.log("Deleted", itemIndex)
+      itemJsonArray = JSON.parse(itemJsonArrayStr);
 
-      // After Filling The Table
+      itemJsonArray.splice(itemIndex, 1);
+      localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray));
+      update();
+    }
+    function clearStorage() {
+      if (confirm("Do you areally want to clear?")) {
+        console.log('Clearing the storage')
+        localStorage.clear();
+        update()
+      }
+    }
 
-    </script>
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-      crossorigin="anonymous"></script>
+  </script>
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>
